@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Jobs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="{% static 'posting/main.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="logo">JOBBOARD</div>
+    <hr>
+    <a href="{% url 'dashboard' %}">📊 Dashboard</a>
+    <hr>
+    <a href="{% url 'home' %}">🏠 Home</a>
+    <hr>
+    <a href="{% url 'post_job' %}">💼 Post Jobs</a>
+    <hr>
+    <a href="{% url 'companyProfile' %}">🏢 Company Profile</a>
+    <hr>
+    <a href="{% url 'upload_resume' %}">📄 Job Applications</a>
+    <hr>
+    <a href="{% url 'education' %}">🗂️ Interview Process</a>
+    <hr>
+    <a href="{% url 'skill' %}">📅 Interviews Held</a>
+    <hr>
+    <a href="{% url 'logout' %}">🔒 Logout</a>
+    <hr>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <button class="toggle" id="toggleSidebar" aria-label="Toggle Sidebar">☰</button>
+    <div class="col-12">
+      <h4>Welcome {{ user.first_name }}</h4>
+    </div>
+  </nav>
+
+  <!-- Job Posting Form -->
+  <div class="container">
+    <form action="{% url 'post_job' %}" class="p-4 p-md-5 border rounded" method="post" onsubmit="return checkDate()">
+      {% csrf_token %}
+      <h3>Post A Job</h3>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" placeholder="you@yourdomain.com" value="{{ user.email }}" readonly>
+      </div>
+
+      <!-- Job Title Field -->
+      <div class="form-group">
+        <label for="job-title">Job Title</label>
+        <input type="text" class="form-control" id="job-title" name="job_title" placeholder="Product Designer" required>
+      </div>
+
+      <!-- Skills Field -->
+      <div class="form-group">
+        <label for="skills">Skills</label>
+        <input type="text" class="form-control" id="skills" name="job_skill" placeholder="e.g. Python, JavaScript">
+        <div class="skills-container" id="skills-container"></div>
+      </div>
+
+      <!-- Location Field -->
+      <div class="form-group">
+        <label for="job-location">Location</label>
+        <input type="text" class="form-control" id="job-location" name="location" placeholder="e.g. New York" required>
+      </div>
+
+      <!-- Experience Field -->
+      <div class="form-group">
+        <label for="job-experience">Experience</label>
+        <input type="text" class="form-control" id="experience" name="experience" placeholder="e.g. 0-1 years" required>
+      </div>
+
+      <!-- Salary Field -->
+      <div class="form-group">
+        <label for="job-salary">Salary</label>
+        <input type="text" class="form-control" id="job-salary" name="salary" placeholder="e.g. 10 LPA" required>
+      </div>
+
+      <!-- Deadline Field -->
+      <div class="form-group">
+        <label for="deadline">Deadline</label>
+        <input type="date" class="form-control" id="date" name="deadline" placeholder="YYYY-MM-DD" required>
+        <div id="error-message" style="color: red; display: none;"></div>
+      </div>
+
+      <!-- Job Region Field -->
+      <div class="form-group">
+        <label for="job-region">Job Region</label>
+        <select class="form-control" id="job-region" name="job_region" required>
+          <option>Andhra</option>
+          <option>Arcot</option>
+          <option>Awadh</option>
+          <option>Bengal</option>
+          <option>Berar</option>
+          <option>Bihar</option>
+          <option>Braj</option>
+          <option>Bundelkhand</option>
+          <option>Ma'bar Coast</option>
+          <option>Majha</option>
+          <option>Malabar Coast</option>
+          <option>Malwa (Punjab)</option>
+        </select>
+      </div>
+
+      <!-- Job Type Field -->
+      <div class="form-group">
+        <label for="job-type">Job Type</label>
+        <select class="form-control" id="job-type" name="job_type" required>
+          <option>Part Time</option>
+          <option>Full Time</option>
+        </select>
+      </div>
+
+      <!-- Job Description Field -->
+      <div class="form-group">
+        <label for="job-description">Job Description</label>
+        <textarea class="form-control" id="job-description" name="job_description" rows="3"></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="row mb-5">
+        <div class="col-lg-4 ml-auto">
+          <div class="row">
+            <div class="col-6">
+              <button type="submit" class="btn btn-primary btn-block">Save Job</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    {% if messages %}
+    {% for message in messages %}
+    Toastify({
+      text: "{{ message }}",
+      duration: 3000,  // Duration in milliseconds
+      close: true,     // Show close button
+      gravity: "bottom",  // Toast position (top or bottom)
+      position: "center",  // Align to right
+      backgroundColor: "{% if message.tags == 'success' %}#28a745{% elif message.tags == 'error' %}#dc3545{% else %}#007bff{% endif %}",
+    }).showToast();
+    {% endfor %}
+    {% endif %}
+
+    // Sidebar Toggle
+    document.getElementById('toggleSidebar').addEventListener('click', function () {
+      document.getElementById('sidebar').classList.toggle('active');
+    });
+
+    // Skills Input Handling
+    document.getElementById('skills').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+
+        const skillValue = this.value.trim();
+        if (skillValue) {
+          const skillElement = document.createElement('div');
+          skillElement.className = 'green-element';
+          skillElement.innerHTML = `
+            <span>${skillValue}</span>
+            <button type="button" class="remove-skill">x</button>
+          `;
+
+          document.getElementById('skills-container').appendChild(skillElement);
+          this.value = '';
+
+          // Event listener for removing a skill
+          skillElement.querySelector('.remove-skill').addEventListener('click', function () {
+            skillElement.remove();
+          });
+        }
+      }
+    });
+
+    // Date Validation
+    function checkDate() {
+      const today = new Date();
+      const inputDate = new Date(document.getElementById('date').value);
+      const errorMessage = document.getElementById('error-message'); // Reference the error message element
+
+      if (inputDate <= today) {
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = 'Please select a date in the future';
+        document.getElementById('date').value = '';
+        return false;
+      } else {
+        errorMessage.style.display = 'none';
+        return true;
+      }
+    }
+  </script>
+
+</body>
+
+</html>

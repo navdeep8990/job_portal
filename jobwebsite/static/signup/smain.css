@@ -1,0 +1,219 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    padding: 20px;
+    margin: 20px auto;
+    flex-grow: 1;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.form-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-field {
+    flex: 1;
+    min-width: 45%;
+}
+
+label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.radio-group label {
+    font-weight: normal;
+    margin: 0;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    color: white;
+    background-color: #2bc27c;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2bc27c;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.navbar .button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.navbar .btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.navbar .btn-post-job {
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.navbar .btn-login {
+    background-color: #8cc63f;
+    color: white;
+    border: none;
+}
+
+/* Footer */
+footer {
+    background-color: #555;
+    color: white;
+    padding: 40px 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    text-align: left;
+}
+
+.footer-left a,
+.footer-right a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-left a:hover,
+.footer-right a:hover {
+    color: #8cc63f;
+}
+
+.footer-social a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.footer-social a:hover {
+    color: #8cc63f;
+}
+
+.col-12 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.scroll-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #8cc63f;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    display: none;
+}
+
+.scroll-top.show {
+    display: flex;
+}
+
+.scroll-top:hover {
+    background-color: #645f5f;
+}
+
+.messages {
+    list-style: none;
+    padding: 0;
+}
+
+.messages li {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+}
+
+.messages .success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.messages .error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.required {
+    color: red;
+    font-weight: bold;
+}

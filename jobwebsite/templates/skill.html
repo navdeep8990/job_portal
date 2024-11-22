@@ -1,0 +1,294 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- Toastify JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'education/education.css' %}" rel="stylesheet">
+</head>
+
+<style>
+    .form-group select {
+        width: 190%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .form-group option {
+        font-size: 1rem;
+    }
+    .required {
+        color: red;
+        font-weight: bold;
+    }
+    
+</style>
+
+<body>
+    <script>
+        // Function to validate the skill name and experience
+        function validateSkillAndExperience() {
+            var skillName = document.getElementById('degree').value.trim();
+            var experience = document.getElementById('experience').value.trim();
+            const errorMessage = document.getElementById('error-message'); // Retrieve the error message element
+
+            // Regular expression for skill name validation (letters, hyphens, and spaces only)
+            var skillNamePattern = /^[a-zA-Z\s]+(?:-[a-zA-Z\s]+)*$/;
+
+            // Validate the skill name
+            if (!skillNamePattern.test(skillName)) {
+                errorMessage.textContent = "Invalid skill name. Only letters, hyphens, and spaces are allowed.";
+                errorMessage.style.display = 'block';
+                return false; // Prevent form submission
+            }
+
+            // Validate the experience as an integer
+            var experienceValue = parseInt(experience, 10); // Convert to integer
+            if (isNaN(experienceValue) || experienceValue < 0) {
+                errorMessage.textContent = "Experience cannot be negative or non-numeric.";
+                errorMessage.style.display = 'block';
+                return false; // Prevent form submission
+            } else if (experienceValue > 50) {
+                errorMessage.textContent = "Experience cannot exceed 50 years.";
+                errorMessage.style.display = 'block';
+                return false; // Prevent form submission
+            }
+
+            return true;
+        }
+
+        // Add event listener for form submission to trigger validation
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('form').addEventListener('submit', function (event) {
+                if (!validateSkillAndExperience()) {
+                    event.preventDefault(); // Prevent form submission if validation fails
+                }
+            });
+        });
+    </script>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">JOBBOARD</div>
+        <hr>
+        <a href="{% url 'dashboard' %}">📊 Dashboard</a>
+        <hr>
+        <a href="{% url 'home' %}">🏠 Home</a>
+        <hr>
+        <a href="{% url 'job_list' %}">💼 Jobs</a>
+        <hr>
+        <a href="{% url 'profile' %}">👤 My Profile</a>
+        <hr>
+        <a href="{% url 'education' %}">🎓 Education</a>
+        <hr>
+        <a href="{% url 'upload_resume' %}">📄 Upload Resume</a>
+        <hr>
+        <a href="{% url 'skill' %}">🔧 Explore My Skills</a>
+        <hr>
+        <a href="{% url 'logout' %}">🔒 Logout</a>
+        <hr>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <button class="toggle" id="toggleSidebar">☰</button>
+        <h4>Welcome {{ user.first_name }}</h4>
+    </nav>
+
+    <h2>Explore My Skills</h2>
+
+    <!-- Profile and Education Section -->
+    <div class="profile-education-container">
+
+        <!-- Profile Form -->
+        <div class="form-container">
+            <div class="profile-container">
+                <img id="profileImage" src="{{ user.photo.url|default:'{% static "images/default.jpeg" %}' }}" alt="User Image" class="profile-image">
+            </div>
+
+            <form id="form" action="{% url 'skill' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="education-id" name="skill_id" value="{{ skill.CandidateSkill_id|default:'' }}">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="degree">Skill Name <span class="required">*</span> </label>
+                        <input type="text" id="degree" name="Skill_name" value="{{ skill.skill_name|default:'' }}" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="proficiency_level">Proficiency Level <span class="required">*</span> </label>
+                        <select id="proficiency_level" name="proficiency_level" required>
+                            <option value="" disabled selected>Select Proficiency Level</option>
+                            <option value="Beginner" {% if skill.proficiency_level == "Beginner" %}selected{% endif %}>Beginner</option>
+                            <option value="Intermediate" {% if skill.proficiency_level == "Intermediate" %}selected{% endif %}>Intermediate</option>
+                            <option value="Expert" {% if skill.proficiency_level == "Expert" %}selected{% endif %}>Expert</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="experience">Experience <span class="required">*</span> </label>
+                        <input type="text" id="experience" name="experience" value="{{ skill.experience|default:'' }}" placeholder="Enter years of experience" required>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" >{{ skill.Description|default:'' }}</textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submit-btn">{% if skill %}Update{% else %}Add Skill{% endif %}</button>
+                <div id="error-message" style="color: red; display: none;"></div>
+            </form>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="education-section">
+            <div class="education-header">
+                <h3>My Skills</h3>
+            </div>
+
+            <div class="education-item">
+                {% if skills %}
+                <table class="education-table">
+                    <thead>
+                        <tr>
+                            <th>Skill</th>
+                            <th>Proficiency Level</th>
+                            <th>Experience</th>
+                            <th>Description</th>
+                            
+                            <th>Actions</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for skill in skills %}
+                        <tr>
+                            <td>{{ skill.skill_name }}</td>
+                            <td>{{ skill.proficiency_level }}</td>
+                            <td>{{ skill.experience }}</td>
+                            <td>{{ skill.Description }}</td>
+                            <td>
+                                <button id="button-edit" class="btn btn-outline-success" onclick="editSkill(event, '{{ skill.CandidateSkill_id }}');">
+                                    <i class="bi bi-pencil-fill" style="color: green;"></i>
+                                </button>
+
+                                <button id="button-delete" class="btn btn-outline-danger" onclick="confirmDelete('{% url 'delete_skill' skill.CandidateSkill_id %}')">
+                                    <i class="bi bi-trash-fill" style="color: red;"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No Skills added..!!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+
+            // Store the current state of the sidebar in localStorage
+            const sidebarActive = sidebar.classList.contains('active');
+            localStorage.setItem('sidebarState', sidebarActive ? 'inactive' : 'active');
+        }
+
+        // Function to restore the sidebar state from localStorage on page load
+        function restoreSidebarState() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarState = localStorage.getItem('sidebarState');
+
+            // If the sidebar state is 'inactive', add the 'active' class to hide it
+            if (sidebarState === 'inactive') {
+                sidebar.classList.add('active');
+            }
+        }
+
+        // Add event listener for sidebar toggle button
+        document.getElementById('toggleSidebar').addEventListener('click', toggleSidebar);
+
+        // Restore sidebar state on page load
+        document.addEventListener('DOMContentLoaded', restoreSidebarState);
+
+
+
+        function editSkill(event, skillId) {
+            // Prevent default form submission
+            window.location.href = '?skill_id=' + skillId; // Perform the redirection without reloading the whole page
+            event.preventDefault();
+        }
+
+        function confirmDelete(url) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                customClass: {
+                    title: 'swal-custom-title',
+                    content: 'swal-custom-content',
+                    confirmButton: 'swal-custom-confirm',
+                    cancelButton: 'swal-custom-cancel',
+                    text: 'swal-custom-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location = url;
+                }
+            });
+        }
+
+        {% if messages %}
+        {% for message in messages %}
+        Toastify({
+            text: "{{ message }}",
+            duration: 3000,  // Duration in milliseconds
+            close: true,     // Show close button
+            gravity: "bottom",  // Toast position (top or bottom)
+            position: "center",  // Align to right
+            backgroundColor: "{% if message.tags == 'success' %}#28a745{% elif message.tags == 'error' %}#dc3545{% else %}#007bff{% endif %}",
+        }).showToast();
+        {% endfor %}
+        {% endif %}
+    </script>
+
+</body>
+
+</html>

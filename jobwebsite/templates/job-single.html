@@ -1,0 +1,441 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>JobBoard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+  <link rel="stylesheet" href="{% static 'css/custom-bs.css' %}">
+  <link rel="stylesheet" href="{% static 'css/jquery.fancybox.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-select.min.css' %}">
+  <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
+  <link rel="stylesheet" href="{% static 'fonts/line-icons/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <!-- Toastify JS -->
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <!-- MAIN CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<style>
+  #img-src {
+    width: 706px;
+    height: 368px;
+  }
+
+  .img-fluid {
+
+    max-width: 100%;
+    height: 175px;
+  }
+
+  #mybutton {
+    color: #fff;
+    background-color: #8bc34a;
+  }
+</style>
+
+
+<body id="top">
+
+  <div id="overlayer"></div>
+  <div class="loader">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+
+  <div class="site-wrap">
+
+    <div class="site-mobile-menu site-navbar-target">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+          <span class="icon-close2 js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div> <!-- .site-mobile-menu -->
+
+
+    <!-- NAVBAR -->
+    <header class="site-navbar mt-3">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="site-logo col-6"><a href="{% url 'home' %}">JobBoard</a></div>
+          <nav class="mx-auto site-navigation">
+            <ul class="site-menu js-clone-nav d-none d-xl-block ml-0 pl-0">
+              <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+              <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
+              <li><a href="{% url 'job_list' %}" class="active">Job Listings</a></li>
+              <li class="has-children">
+                <a href="{% url 'services' %}">Pages</a>
+                <ul class="dropdown">
+                  <li><a href="{% url 'services' %}">Services</a></li>
+                  <li><a href="{% url 'service_single' %}">Service Single</a></li>
+                  <li><a href="{% url 'blog_single' %}">Blog Single</a></li>
+                  <li><a href="{% url 'portfolio' %}">Portfolio</a></li>
+                  <li><a href="{% url 'portfolio_single' %}">Portfolio Single</a></li>
+                  <li><a href="{% url 'testimonials' %}">Testimonials</a></li>
+                  <li><a href="{% url 'faq' %}">Frequently Asked Questions</a></li>
+                  <li><a href="{% url 'gallery' %}">Gallery</a></li>
+                </ul>
+              </li>
+              <li><a href="{% url 'blog' %}">Blog</a></li>
+              <li><a href="{% url 'contact' %}">Contact</a></li>
+              {% if user.is_authenticated %}
+              <li>
+                <a
+                  href="{% if user.usertype == 'company' %}{% url 'companyProfile' %} {% else %} {% url 'dashboard' %} {% endif %}"><strong>Welcome
+                    {{ user.first_name|default:"user" }}</strong> </a>
+              </li>
+              {% else %}
+              <li class="d-lg-none"><a href="#"><span class="mr-2">+</span><strong>Guest</strong></a>
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
+          <div class="right-cta-menu text-right d-flex align-items-center col-6">
+            <div class="ml-auto">
+              {% if user.is_authenticated and user.usertype == 'company' %}
+              <a href="{% url 'post_job' %}" class="btn btn-outline-white border-width-2 d-none d-lg-inline-block"><span
+                  class="mr-2 icon-add"></span>Post a Job</a>
+              <a href="{% url 'logout' %}" class="btn btn-primary border-width-2 d-none d-lg-inline-block"><span
+                  class="mr-2 icon-lock_outline"></span>Log Out</a>
+              {% else %}
+              {% if user.is_authenticated %}
+              <a href="{% url 'logout' %}" class="btn btn-primary border-width-2 d-none d-lg-inline-block"><span
+                  class="mr-2 icon-lock_outline"></span>Log Out</a>
+              {% else %}
+              <a href="{% url 'login' %}" class="btn btn-primary border-width-2 d-none d-lg-inline-block"><span
+                  class="mr-2 icon-lock_outline"></span>Log In</a>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+          <a href="#" class="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3"><span
+              class="icon-menu h3 m-0 p-0 mt-2"></span></a>
+        </div>
+      </div>
+  </div>
+  </header>
+
+  <!-- HOME -->
+  <section class="section-hero overlay inner-page bg-image"
+    style="background-image: url({% static 'images/hero_1.jpg' %});" id="home-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-7">
+          <h1 class="text-white font-weight-bold">{{jobs.title}}</h1>
+          <div class="custom-breadcrumbs">
+            <a href="#">Home</a> <span class="mx-2 slash">/</span>
+            <a href="#">Job</a> <span class="mx-2 slash">/</span>
+            <span class="text-white"><strong>{{jobs.title}}</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="site-section">
+    <div class="container">
+      <div class="row align-items-center mb-5">
+        <div class="col-lg-8 mb-4 mb-lg-0">
+          <div class="d-flex align-items-center">
+            <div class="border p-2 d-inline-block mr-3 rounded">
+              <img src="{{jobs.company.logo.url}}" alt="Image" class="img-fluid rounded">
+            </div>
+            <div>
+              <h2>{{ jobs.title }}</h2>
+              <div>
+                <span class="ml-0 mr-2 mb-2"><span class="icon-briefcase mr-2"></span>{{jobs.company}}</span>
+                <span class="m-2"><span class="icon-room mr-2"></span>{{jobs.location}}</span>
+                <span class="m-2"><span class="icon-clock-o mr-2"></span><span
+                    class="text-primary">{{ jobs.employment_type }}
+                  </span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="row">
+            <div class="col-6">
+              <a href="{% if user.usertype == 'company' and jobs.company.user == user %} {% url 'edit' jobs.id %} {% else %} # {% endif %}"
+                class="btn btn-block btn-light btn-md"><span class="mr-2 text-danger"></span>{% if user.usertype == 'company' %} Edit {% else %} Save Job {%endif%}</a>
+            </div>
+            <div class="col-6">
+              <a {% if user.usertype == 'company' and jobs.company.user == user %}
+                onclick="confirmDelete('{% url 'delete_job' jobs.id %}')" {% else %} href="{% url 'ApplyJob' jobs.id %}" {% endif %} id="mybutton"
+                class="btn btn-block btn-primary btn-md">
+                {% if user.usertype == 'company' %} Delete {% else %} Apply Now {% endif %}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="mb-5">
+            <figure class="mb-5"><img id="img-src" src="{% static 'images/job_single_img_1.jpg' %}" alt="Image">
+            </figure>
+            <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-align-left mr-3"></span>Job
+              Description</h3>
+            <p>{{jobs.description}}</p>
+          </div>
+          <div class="mb-5">
+            <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-rocket mr-3"></span>Skills
+              Required</h3>
+            <ul class="list-unstyled m-0 p-0">
+              {% for skill in skill %}
+              <li class="d-flex align-items-start mb-2">
+                <span class="icon-check_circle mr-2 text-muted"></span><span>{{ skill.skill_name  }}</span>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-book mr-3"></span>
+              Experience</h3>
+            <ul class="list-unstyled m-0 p-0">
+              <li class="d-flex align-items-start mb-2"><span
+                  class="icon-check_circle mr-2 text-muted"></span><span>{{ jobs.experience }}</span></li>
+              {% comment %} <li class="d-flex align-items-start mb-2"><span
+                  class="icon-check_circle mr-2 text-muted"></span><span>Velit unde aliquam et voluptas reiciendis non
+                  sapiente labore</span></li>
+              <li class="d-flex align-items-start mb-2"><span
+                  class="icon-check_circle mr-2 text-muted"></span><span>Commodi quae ipsum quas est itaque</span>
+              </li>
+              <li class="d-flex align-items-start mb-2"><span
+                  class="icon-check_circle mr-2 text-muted"></span><span>Lorem ipsum dolor sit amet, consectetur
+                  adipisicing elit</span></li>
+              <li class="d-flex align-items-start mb-2"><span
+                  class="icon-check_circle mr-2 text-muted"></span><span>Deleniti asperiores blanditiis nihil quia
+                  officiis dolor</span></li> {% endcomment %}
+            </ul>
+          </div>
+
+        </div>
+        <div class="col-lg-4">
+          <div class="bg-light p-3 border rounded mb-4">
+            <h3 class="text-primary  mt-3 h5 pl-3 mb-3 ">Job Summary</h3>
+            <ul class="list-unstyled pl-3 mb-0">
+              <li class="mb-2"><strong class="text-black">Published on:</strong>{{jobs.published_at}}</li>
+              {% comment %} <li class="mb-2"><strong class="text-black">Vacancy:</strong> 20</li> {% endcomment %}
+              <li class="mb-2"><strong class="text-black">Employment Status:</strong> {{jobs.employment_type}}</li>
+              <li class="mb-2"><strong class="text-black">Experience:</strong> {{jobs.experience}}</li>
+              <li class="mb-2"><strong class="text-black">Job Location:</strong> {{jobs.location}}</li>
+              <li class="mb-2"><strong class="text-black">Salary:</strong>{{jobs.salary}}</li>
+              <li class="mb-2"><strong class="text-black">Gender:</strong> Any</li>
+              <li class="mb-2"><strong class="text-black">Application Deadline:</strong> {{ jobs.deadline }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="site-section" id="next">
+    <div class="container">
+      <div class="row mb-5 justify-content-center">
+        <div class="col-md-7 text-center">
+          <h2 class="section-title mb-2">{{ count|add:"-1" }} Related Jobs</h2>
+        </div>
+      </div>
+      {% for jobs in job %}
+      <ul class="job-listings mb-5" id="jobList">
+        <li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+          <a href="{% url 'job_list' %}"></a>
+          <div class="job-listing-logo">
+            <img src="{{jobs.company.logo.url}}" alt="Image" class="img-fluid">
+          </div>
+
+          <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+            <div class="job-listing-position custom-width w-50 mb-3 mb-sm-0">
+              <h2>{{jobs.title}}</h2>
+              <strong>{{jobs.company}}</strong>
+            </div>
+            <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+              <span class="icon-room"></span> {{jobs.region}} , {{jobs.location}}
+            </div>
+            <div class="job-listing-meta">
+              <span class="badge badge-danger">{{jobs.employment_type}}</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+      {% endfor %}
+
+      <div class="row pagination-wrap">
+        <div class="col-md-6 text-center text-md-left mb-4 mb-md-0">
+          <span>Showing 1-5 Of {{ count|add:"-1" }} Jobs</span>
+        </div>
+        <div class="col-md-6 text-center text-md-right">
+          <div class="custom-pagination ml-auto">
+            {% if job.has_previous %}
+            <a href="#" class="prev" onclick="Pagination_without_reload({{ job.previous_page_number }})">Prev</a>
+            {% endif %}
+            <div class="d-inline-block">
+              {% for num in job.paginator.page_range %}
+              {% if job.number == num %}
+              <a href="#" class="active" onclick="Pagination_without_reload({{ num }})">{{ num }}</a>
+              {% else %}
+              <a href="#" onclick="Pagination_without_reload({{ num }})">{{ num }}</a>
+              {% endif %}
+              {% endfor %}
+            </div>
+            {% if job.has_next %}
+            <a href="#" class="next" onclick="Pagination_without_reload({{ job.next_page_number }})">Next</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <footer class="site-footer">
+
+    <a href="#top" class="smoothscroll scroll-top">
+      <span class="icon-keyboard_arrow_up"></span>
+    </a>
+
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-6 col-md-3 mb-4 mb-md-0">
+          <h3>Search Trending</h3>
+          <ul class="list-unstyled">
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Graphic Design</a></li>
+            <li><a href="#">Web Developers</a></li>
+            <li><a href="#">Python</a></li>
+            <li><a href="#">HTML5</a></li>
+            <li><a href="#">CSS3</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3 mb-4 mb-md-0">
+          <h3>Company</h3>
+          <ul class="list-unstyled">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Career</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Resources</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3 mb-4 mb-md-0">
+          <h3>Support</h3>
+          <ul class="list-unstyled">
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3 mb-4 mb-md-0">
+          <h3>Contact Us</h3>
+          <div class="footer-social">
+            <a href="#"><span class="icon-facebook"></span></a>
+            <a href="#"><span class="icon-twitter"></span></a>
+            <a href="#"><span class="icon-instagram"></span></a>
+            <a href="#"><span class="icon-linkedin"></span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row text-center">
+        <div class="col-12">
+          <p class="copyright"><small>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              Copyright &copy;
+              <script>document.write(new Date().getFullYear());</script> All rights reserved | This website is
+              made By
+              <i class="icon-heart text-danger" aria-hidden="true"></i> <a href="#" target="_blank">Navdeep
+                Singh</a>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </small></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/isotope.pkgd.min.js'%}"></script>
+  <script src="{% static 'js/stickyfill.min.js ' %}"></script>
+  <script src="{% static 'js/jquery.fancybox.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+
+  <script src="{% static 'js/bootstrap-select.min.js' %}"></script>
+
+  <script src="{% static 'js/custom.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    function confirmDelete(url) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        customClass: {
+          title: 'swal-custom-title',
+          content: 'swal-custom-content',
+          confirmButton: 'swal-custom-confirm',
+          cancelButton: 'swal-custom-cancel',
+          text: 'swal-custom-text'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location = url;
+        }
+      });
+    }
+    // Toast notifications
+    {% if messages %}
+    {% for message in messages %}
+    Toastify({
+      text: "{{ message }}",
+      duration: 3000,
+      close: true,
+      gravity: "bottom",
+      position: "center",
+      backgroundColor: "{% if message.tags == 'success' %}#28a745{% elif message.tags == 'error' %}#dc3545{% else %}#007bff{% endif %}",
+    }).showToast();
+    {% endfor %}
+    {% endif %}
+
+    function Pagination_without_reload(page) {
+      event.preventDefault();
+      $.ajax({
+        url: window.location.pathname,
+        type: 'GET',
+        data: {
+          page: page
+        },
+        success: function (data) {
+          $('#jobList').html($(data).find('#jobList').html());
+          $('.custom-pagination').html($(data).find('.custom-pagination').html());
+          $('#pageInfo').text($(data).find('#pageInfo').text());
+        },
+        error: function () {
+          alert('Error loading jobs.');
+        }
+      });
+    }
+
+  </script>
+
+
+</body>
+
+</html>

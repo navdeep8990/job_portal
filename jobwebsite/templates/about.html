@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+<header class="site-navbar mt-3">
+  <div class="container-fluid">
+    <div class="row align-items-center">
+      <div class="site-logo col-6"><a href="{% url 'home' %}">JobBoard</a></div>
+      <nav class="mx-auto site-navigation">
+        <ul class="site-menu js-clone-nav d-none d-xl-block ml-0 pl-0">
+          <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+          <li><a href="{% url 'about' %}" class="active">About</a></li>
+          <li class="has-children">
+            <a href="{% url 'job_list' %}">Job Listings</a>
+          </li>
+          <li class="has-children">
+            <a href="{% url 'services' %}">Pages</a>
+            <ul class="dropdown">
+              <li><a href="{% url 'services' %}">Services</a></li>
+              <li><a href="{% url 'service_single' %}">Service Single</a></li>
+              <li><a href="{% url 'blog_single' %}">Blog Single</a></li>
+              <li><a href="{% url 'portfolio' %}">Portfolio</a></li>
+              <li><a href="{% url 'portfolio_single' %}">Portfolio Single</a></li>
+              <li><a href="{% url 'testimonials' %}">Testimonials</a></li>
+              <li><a href="{% url 'faq' %}">Frequently Asked Questions</a></li>
+              <li><a href="{% url 'gallery' %}">Gallery</a></li>
+            </ul>
+          </li>
+          <li><a href="{% url 'blog' %}">Blog</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+          {% if user.is_authenticated %}
+          <li>
+            <a
+              href="{% if user.usertype == 'company' %}{% url 'companyProfile' %} {% else %} {% url 'dashboard' %} {% endif %}"><strong>Welcome
+                {{ user.first_name|default:"user" }}</strong> </a>
+          </li>
+          {% else %}
+          <li class="d-lg-none"><a href="#"><span class="mr-2">+</span><strong>Guest</strong></a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      <div class="right-cta-menu text-right d-flex align-items-center col-6">
+        <div class="ml-auto">
+          {% if user.is_authenticated and user.usertype == 'company' %}
+          <a href="{% url 'post_job' %}" class="btn btn-outline-white border-width-2 d-none d-lg-inline-block"><span
+              class="mr-2 icon-add"></span>Post a Job</a>
+          <a href="{% url 'logout' %}" class="btn btn-primary border-width-2 d-none d-lg-inline-block"><span
+              class="mr-2 icon-lock_outline"></span>Log Out</a>
+          {% else %}
+          {% if user.is_authenticated %}
+          <a href="{% url 'logout' %}" class="btn btn-primary border-width-2 d-none d-lg-inline-block"><span
+              class="mr-2 icon-lock_outline"></span>Log Out</a>
+          {% else %}
+          <a href="{% url 'login' %}" class="btn btn-primary border-width-2 d-none d-lg-inline-block"><span
+              class="mr-2 icon-lock_outline"></span>Log In</a>
+          {% endif %}
+        </div>
+        {% endif %}
+        <a href="#" class="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3"><span
+            class="icon-menu h3 m-0 p-0 mt-2"></span></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section-hero overlay inner-page bg-image"
+  style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7">
+        <h1 class="text-white font-weight-bold">About Us</h1>
+        <div class="custom-breadcrumbs">
+          <a href="{% url 'home' %}">Home</a> <span class="mx-2 slash">/</span>
+          <span class="text-white"><strong>About Us</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-5 bg-image overlay-primary fixed overlay" id="next-section"
+  style="background-image: url('{% static 'images/hero_1.jpg' %}');">
+  <div class="container">
+    <div class="row mb-5 justify-content-center">
+      <div class="col-md-7 text-center">
+        <h2 class="section-title mb-2 text-white">JobBoard Site Stats</h2>
+        <p class="lead text-white">Life presents us with numerous challenges and responsibilities. It is essential to
+          confront obstacles with integrity and resilience, ensuring that we act justly and avoid the pitfalls of
+          corruption.</p>
+      </div>
+    </div>
+    <div class="row pb-0 block__19738 section-counter">
+
+      <div class="col-6 col-md-6 col-lg-3 mb-5 mb-lg-0">
+        <div class="d-flex align-items-center justify-content-center mb-2">
+          <strong class="number" data-number="1930">0</strong>
+        </div>
+        <span class="caption">Candidates</span>
+      </div>
+
+      <div class="col-6 col-md-6 col-lg-3 mb-5 mb-lg-0">
+        <div class="d-flex align-items-center justify-content-center mb-2">
+          <strong class="number" data-number="54">0</strong>
+        </div>
+        <span class="caption">Jobs Posted</span>
+      </div>
+
+      <div class="col-6 col-md-6 col-lg-3 mb-5 mb-lg-0">
+        <div class="d-flex align-items-center justify-content-center mb-2">
+          <strong class="number" data-number="120">0</strong>
+        </div>
+        <span class="caption">Jobs Filled</span>
+      </div>
+
+      <div class="col-6 col-md-6 col-lg-3 mb-5 mb-lg-0">
+        <div class="d-flex align-items-center justify-content-center mb-2">
+          <strong class="number" data-number="550">0</strong>
+        </div>
+        <span class="caption">Companies</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="site-section pb-0">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-5 mb-lg-0">
+        <a data-fancybox data-ratio="2" href="https://vimeo.com/317571768" class="block__96788">
+          <span class="play-icon"><span class="icon-play"></span></span>
+          <img src="{% static 'images/sq_img_6.jpg' %}" alt="Image" class="img-fluid img-shadow">
+        </a>
+      </div>
+      <div class="col-lg-5 ml-auto">
+        <h2 class="section-title mb-3">JobBoard For Freelancers, Web Developers</h2>
+        <p class="lead">Challenges can bring discomfort and pain, but they also present opportunities for growth.
+          Despite life's complexities and the burdens we face, it’s important to approach each situation with
+          determination and empathy. Embracing our experiences, both good and bad, helps us find meaning and resilience
+          in our journey.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="site-section pt-0"></section>
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-lg-6 mb-5 mb-lg-0 order-md-2">
+      <a data-fancybox data-ratio="2" href="https://vimeo.com/317571768" class="block__96788">
+        <span class="play-icon"><span class="icon-play"></span></span>
+        <img src="{% static 'images/sq_img_8.jpg' %}" alt="Image" class="img-fluid img-shadow">
+      </a>
+    </div>
+    <div class="col-lg-5 mr-auto order-md-1  mb-5 mb-lg-0">
+      <h2 class="section-title mb-3">JobBoard For Workers</h2>
+      <p class="lead">Challenges can lead to discomfort and trials, presenting us with obstacles that test our resolve.
+        However, these experiences are also gateways to growth and self-discovery. While we may encounter pain and
+        frustration, it is crucial to approach each situation with courage and a willingness to learn.</p>
+      <p>We must take responsibility for the tasks assigned to us, even when challenges seem unavoidable. It is
+        essential to make thoughtful choices in life, seeking options that align with our values and integrity. Swift
+        actions may lead to temporary relief, but only by addressing deeper issues can we find lasting solutions and
+        true fulfillment.
+      </p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="site-section">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-12 text-center" data-aos="fade">
+        <h2 class="section-title mb-3">Our Team</h2>
+      </div>
+    </div>
+
+    <div class="row align-items-center block__69944">
+
+      <div class="col-md-6">
+        <img src="{% static 'images/person_6.jpg' %}" alt="Image" class="img-fluid mb-4 rounded">
+      </div>
+
+      <div class="col-md-6">
+        <h3>Elisabeth Smith</h3>
+        <p class="text-muted">Creative Director</p>
+        <p>Amid uncertainties, he navigated effortlessly, handling each challenge with poise. Despite the persistent
+          frustrations and false accusations, he carried the weight of his burdens with resilience. In the depths of
+          hardship and turmoil, he adapted with ease, finding strength where others faltered. Faced with complex legal
+          entanglements and difficult decisions, he maintained composure, evaluating his options with precision.</p>
+        <div class="social mt-4">
+          <a href="#"><span class="icon-facebook"></span></a>
+          <a href="#"><span class="icon-twitter"></span></a>
+          <a href="#"><span class="icon-instagram"></span></a>
+          <a href="#"><span class="icon-linkedin"></span></a>
+        </div>
+      </div>
+
+      <div class="col-md-6 order-md-2 ml-md-auto">
+        <img src="{% static 'images/person_5.jpg' %}" alt="Image" class="img-fluid mb-4 rounded">
+      </div>
+
+      <div class="col-md-6">
+        <h3>Chintan Patel</h3>
+        <p class="text-muted">Creative Director</p>
+        <p>Nearly free from constraints, he navigated the situation with ease, despite the persistent frustrations and
+          accusations. Pain and burdens weighed heavily, but he resisted them. In the depths of hardship, with every
+          challenge and setback, he found a way to adapt. At times, he faced confusing legal matters and difficult
+          decisions, yet he remained resilient, choosing carefully among the options presented. Even when burdened by
+          complex circumstances, he refused to be overwhelmed, always pressing forward with confidence.</p>
+        <div class="social mt-4">
+          <a href="#"><span class="icon-facebook"></span></a>
+          <a href="#"><span class="icon-twitter"></span></a>
+          <a href="#"><span class="icon-instagram"></span></a>
+          <a href="#"><span class="icon-linkedin"></span></a>
+        </div>
+      </div>
+    </div>
+</section>
+
+<footer class="site-footer">
+
+  <a href="#top" class="smoothscroll scroll-top">
+    <span class="icon-keyboard_arrow_up"></span>
+  </a>
+
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-6 col-md-3 mb-4 mb-md-0">
+        <h3>Search Trending</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">Web Design</a></li>
+          <li><a href="#">Graphic Design</a></li>
+          <li><a href="#">Web Developers</a></li>
+          <li><a href="#">Python</a></li>
+          <li><a href="#">HTML5</a></li>
+          <li><a href="#">CSS3</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3 mb-4 mb-md-0">
+        <h3>Company</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Career</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Resources</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3 mb-4 mb-md-0">
+        <h3>Support</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">Support</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3 mb-4 mb-md-0">
+        <h3>Contact Us</h3>
+        <div class="footer-social">
+          <a href="#"><span class="icon-facebook"></span></a>
+          <a href="#"><span class="icon-twitter"></span></a>
+          <a href="#"><span class="icon-instagram"></span></a>
+          <a href="#"><span class="icon-linkedin"></span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row text-center">
+      <div class="col-12">
+        <p class="copyright"><small>
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            Copyright &copy;
+            <script>document.write(new Date().getFullYear());</script> All rights reserved | This Website
+            is made By <i class="icon-heart text-danger" aria-hidden="true"></i> by <a href="#" target="_blank">Navdeep
+              Singh</a>
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+          </small></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+</div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+<script src="{% static 'js/stickyfill.min.js' %}"></script>
+<script src="{% static 'js/jquery.fancybox.min.js' %}"></script>
+<script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+<script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+
+<!-- External Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stickyfill/2.1.0/stickyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.sticky/1.0.4/jquery.sticky.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.easing/1.4.1/jquery.easing.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancybox/3.5.7/jquery.fancybox.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+{% endblock body %}

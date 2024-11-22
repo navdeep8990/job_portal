@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Job</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" href="{% static 'applicant/main.css' %}">
+</head>
+
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            JOBBOARD
+        </div>
+        <hr>
+        <a href="{% url 'companyProfile' %}">📊 Dashboard</a>
+        <hr>
+        <a href="{% url 'home' %}">🏠 Home</a>
+        <hr>
+        <a href="{% url 'post_job' %}">💼 Post Jobs</a>
+        <hr>
+        <a href="#">🏢 Company Profile</a>
+        <hr>
+        <a href="{% url 'applications' %}">📄 Job Applications</a>
+        <hr>
+        <a href="#">🗂️ Interview Process</a>
+        <hr>
+        <a href="#">📅 Interviews Held</a>
+        <hr>
+        <a href="{% url 'logout' %}">🔒 Logout</a>
+        <hr>
+    </div>
+
+    <nav class="navbar bg-body-tertiary fixed-top">
+        <button class="toggle" id="toggleSidebar">☰</button>
+        <div class="col-12">
+            <h4>Welcome {{ user.first_name }}</h4>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Applicant Details</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Applied at </th>
+                    <th>Resume</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for applicant in applicant %}
+                <tr>
+                    <td>{{ applicant.candidate.user.first_name }}</td>
+                    <td>{{ applicant.candidate.user.last_name }}</td>
+                    <td>{{ applicant.candidate.user.email }}</td>
+                    <td>{{ applicant.applied_at }}</td>
+                    <td><a href="{{ applicant.resume.url }}" target="_parent">View Resume</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        {% if messages %}
+        {% for message in messages %}
+        Toastify({
+            text: "{{ message }}",
+            duration: 3000,
+            close: true,
+            gravity: "bottom",
+            position: "center",
+            backgroundColor: "{% if message.tags == 'success' %}#28a745{% elif message.tags == 'error' %}#dc3545{% else %}#007bff{% endif %}",
+        }).showToast();
+        {% endfor %}
+        {% endif %}
+
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

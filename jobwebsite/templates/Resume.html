@@ -1,0 +1,331 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- Toastify JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            padding: 20px;
+            margin: 20px auto;
+            flex-grow: 1;
+        }
+
+        button.toggle {
+            width: 4%;
+            padding: 12px;
+            font-size: 1rem;
+            color: white;
+            background-color: #5fd9a0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2bc27c;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            position: fixed;
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
+            top: 67px;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar a {
+            color: #555;
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #189f55;
+        }
+
+        .sidebar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #645f5f;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .cancel-button {
+            font-size: 18px;
+            color: #f00;
+            text-decoration: none;
+        }
+
+        .content-wrapper {
+            margin-left: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                margin-left: 0;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            text-align: left;
+        }
+
+        .footer-left a,
+        .footer-right a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-left a:hover,
+        .footer-right a:hover {
+            color: #8cc63f;
+        }
+
+        .footer-social a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        .footer-social a:hover {
+            color: #8cc63f;
+        }
+
+        .col-12 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #8cc63f;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            display: none;
+        }
+
+        .scroll-top.show {
+            display: flex;
+        }
+
+        .scroll-top:hover {
+            background-color: #645f5f;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, .12);
+            color: white;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Profile Image Styling */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        /* Profile image positioned on top-left corner */
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            position: absolute;
+            /* Change to absolute so it moves with the content */
+            top: 143px;
+            left: 553px;
+        }
+
+        .profile-details {
+            margin-left: 140px;
+            /* Make room for the profile image */
+            padding-top: 20px;
+        }
+
+        button.update {
+            width: 100px;
+            padding: 12px;
+            font-size: 1rem;
+            color: white;
+            background-color: #5fd9a0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button.update:hover {
+            background-color: #2bc27c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            JOBBOARD
+            <a href="{% url 'upload_resume' %}" class="cancel-button">❌</a>
+        </div>
+        <hr>
+        <a href="{% url 'dashboard' %}">📊 Dashboard</a>
+        <hr>
+        <a href="{% url 'home' %}">🏠 Home</a>
+        <hr>
+        <a href="{% url 'job_list' %}">💼 Jobs</a>
+        <hr>
+        <a href="{% url 'profile' %}">👤 My Profile</a>
+        <hr>
+        <a href="{% url 'logout' %}">🔒 Logout</a>
+        <hr>
+        <a href="{% url 'upload_resume' %}">📄 Upload Resume</a>
+        <hr>
+        <a href="{% url 'education' %}">🎓 Education</a>
+        <hr>
+    </div>
+
+    <!-- Main Content -->
+    <nav class="navbar bg-body-tertiary fixed-top">
+        <button class="toggle" id="toggleSidebar">☰</button>
+        <div class="col-12">
+            <h4>Welcome {{ user.first_name }}</h4>
+        </div>
+    </nav>
+
+    <section>
+        <!-- User Profile -->
+        <div class="container profile-container">
+            <!-- Profile Image Upload -->
+            <img id="profileImage" src="{{ user.photo.url }}" alt="User Image" class="profile-image">
+
+            <div class="profile-details">
+                <!-- User Info Update -->
+                <h2>Upload Resume</h2>
+                <form action="{% url 'upload_resume' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="resume">Upload Resume</label>
+                    <input type="file" name="resume" id="resume" accept=".pdf">
+                    <button type="submit" class="update">Upload</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Sidebar Toggle
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Profile Image Preview
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const output = document.getElementById('profileImage');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        // Scroll to Top Button
+        window.onscroll = function () {
+            const scrollTopBtn = document.querySelector('.scroll-top');
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        };
+    </script>
+
+</body>
+
+</html>

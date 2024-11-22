@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Job</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="{% static 'posting/main.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">JOBBOARD</div>
+        <hr>
+        <a href="{% url 'dashboard' %}">📊 Dashboard</a>
+        <hr>
+        <a href="{% url 'home' %}">🏠 Home</a>
+        <hr>
+        <a href="{% url 'post_job' %}">💼 Post Jobs</a>
+        <hr>
+        <a href="{% url 'companyProfile' %}">🏢 Company Profile</a>
+        <hr>
+        <a href="{% url 'upload_resume' %}">📄 Job Applications</a>
+        <hr>
+        <a href="{% url 'education' %}">🗂️ Interview Process</a>
+        <hr>
+        <a href="{% url 'skill' %}">📅 Interviews Held</a>
+        <hr>
+        <a href="{% url 'logout' %}">🔒 Logout</a>
+        <hr>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <button class="toggle" id="toggleSidebar">☰</button>
+        <h4>Welcome, {{ user.first_name }}</h4>
+    </nav>
+
+    <!-- Job Posting Form -->
+    <div class="container">
+        <form action="{% url 'edit' job.id %}" class="p-4 p-md-5 border rounded" method="post">
+            {% csrf_token %}
+            <h3>Edit Job</h3>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" value="{{ user.email }}" readonly>
+            </div>
+
+            <!-- Job Title Field -->
+            <div class="form-group">
+                <label for="job-title">Job Title</label>
+                <input type="text" class="form-control" id="job-title" name="job_title" value="{{ job.title }}"
+                    required>
+            </div>
+
+            <!-- Skills Field -->
+            {% for skill in job.skills.all %}
+            <div class="form-group">
+                <label for="skills">Skills</label>
+                <input type="text" class="form-control" id="skills" name="job_skill"
+                    placeholder="e.g. Python, JavaScript" value="{{ skill.skill_name }}">
+                <div class="skills-container" id="skills-container"></div>
+            </div>
+            {% endfor %}
+
+            <!-- Location Field -->
+            <div class="form-group">
+                <label for="job-location">Location</label>
+                <input type="text" class="form-control" id="job-location" name="location" value="{{ job.location }}"
+                    required>
+            </div>
+
+            <!-- Experience Field -->
+            <div class="form-group">
+                <label for="job-experience">Experience</label>
+                <input type="text" class="form-control" id="job-experience" name="experience"
+                    value="{{ job.experience }}" required>
+            </div>
+
+            <!-- Salary Field -->
+            <div class="form-group">
+                <label for="job-salary">Salary</label>
+                <input type="text" class="form-control" id="job-salary" name="salary" value="{{ job.salary }}" required>
+            </div>
+
+            <!-- Job Region Field -->
+            <div class="form-group">
+                <label for="job-region">Job Region</label>
+                <select class="form-control" id="job-region" name="job_region" required>
+                    <option value="Anywhere" {% if job.region == "Anywhere" %}selected{% endif %}>Anywhere</option>
+                    <option value="San Francisco" {% if job.region == "San Francisco" %}selected{% endif %}>San Francisco
+                    </option>
+                    <option value="Palo Alto" {% if job.region == "Palo Alto" %}selected{% endif %}>Palo Alto</option>
+                    <option value="New York" {% if job.region == "New York" %}selected{% endif %}>New York</option>
+                    <option value="Manhattan" {% if job.region == "Manhattan" %}selected{% endif %}>Manhattan</option>
+                    <option value="Ontario" {% if job.region == "Ontario" %}selected{% endif %}>Ontario</option>
+                    <option value="Toronto" {% if job.region == "Toronto" %}selected{% endif %}>Toronto</option>
+                    <option value="Kansas" {% if job.region == "Kansas" %}selected{% endif %}>Kansas</option>
+                    <option value="Mountain View" {% if job.region == "Mountain View" %}selected{% endif %}>Mountain View
+                    </option>
+                </select>
+            </div>
+
+            <!-- Job Type Field -->
+            <div class="form-group">
+                <label for="job-type">Job Type</label>
+                <select class="form-control" id="job-type" name="job_type" required>
+                    <option {% if job.employment_type == "Part Time" %}selected{% endif %}>Part Time</option>
+                    <option {% if job.employment_type == "Full Time" %}selected{% endif %}>Full Time</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Deadline_date">Deadline</label>
+                <input type="date" class="form-control" id="date" name="deadline" value="{{ job.deadline }}" required>
+            </div>
+
+            <!-- Job Description Field -->
+            <div class="form-group">
+                <label for="job-description">Job Description</label>
+                <textarea class="form-control" id="job-description" name="job_description"
+                    rows="3">{{ job.description }}</textarea>
+            </div>
+
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-block">Update Job</button>
+        </form>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Toast notifications
+        {% if messages %}
+        {% for message in messages %}
+        Toastify({
+            text: "{{ message }}",
+            duration: 3000,
+            close: true,
+            gravity: "bottom",
+            position: "center",
+            backgroundColor: "{% if message.tags == 'success' %}#28a745{% elif message.tags == 'error' %}#dc3545{% else %}#007bff{% endif %}",
+        }).showToast();
+        {% endfor %}
+        {% endif %}
+
+        // Sidebar Toggle
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Skills Input Handling
+        document.getElementById('skills').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const skillValue = this.value.trim();
+                if (skillValue) {
+                    const skillElement = document.createElement('div');
+                    skillElement.className = 'green-element';
+                    skillElement.innerHTML = `<span>${skillValue}</span><button type="button" class="remove-skill">x</button>`;
+                    document.getElementById('skills-container').appendChild(skillElement);
+                    this.value = '';
+                    skillElement.querySelector('.remove-skill').addEventListener('click', function () {
+                        skillElement.remove();
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,380 @@
+// stylelint-disable at-rule-no-vendor-prefix, declaration-no-important, selector-no-qualifying-type, property-no-vendor-prefix
+
+// Reboot
+// Normalization of HTML elements, manually forked from Normalize.css to remove
+// styles targeting irrelevant browsers while applying new styles.
+// Normalize is licensed MIT. https://github.com/necolas/normalize.css
+
+// Variables
+$font-family-base: sans-serif;
+$font-size-base: 1rem;
+$font-weight-base: 400;
+$line-height-base: 1.5;
+$body-color: #000;
+$body-bg: #fff;
+$link-color: #007bff;
+$link-hover-color: darken($link-color, 15%);
+$link-decoration: none;
+$link-hover-decoration: underline;
+$headings-margin-bottom: 0.5rem;
+$paragraph-margin-bottom: 1rem;
+$dt-font-weight: bold;
+$font-weight-bolder: 700;
+$table-cell-padding: 0.75rem;
+$table-caption-color: #6c757d;
+$label-margin-bottom: 0.5rem;
+$font-family-monospace: monospace;
+
+// Document
+*,
+*::before,
+*::after {
+  box-sizing: border-box; // Change from `box-sizing: content-box`
+}
+
+html {
+  font-family: $font-family-base; // Change the default font family
+  line-height: 1.15; // Correct the line height
+  -webkit-text-size-adjust: 100%; // Prevent font size adjustments after orientation changes
+  -webkit-tap-highlight-color: rgba($body-color, 0); // Change the default tap highlight to be transparent
+}
+
+// Shim for "new" HTML5 structural elements to display correctly (IE10, older browsers)
+article,
+aside,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section {
+  display: block;
+}
+
+// Body
+body {
+  margin: 0; // Remove the margin
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-base;
+  line-height: $line-height-base;
+  color: $body-color;
+  text-align: left; // Set an explicit initial text-align value
+  background-color: $body-bg; // Apply a default `background-color`
+}
+
+// Suppress the focus outline on elements that cannot be accessed via keyboard
+[tabindex="-1"]:focus {
+  outline: 0 !important;
+}
+
+// Content grouping
+hr {
+  box-sizing: content-box; // Add the correct box sizing in Firefox
+  height: 0;
+  overflow: visible; // Show the overflow in Edge and IE
+}
+
+// Typography
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: $headings-margin-bottom; // Remove top margins from headings
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: $paragraph-margin-bottom; // Reset margins on paragraphs
+}
+
+// Abbreviations
+abbr[title],
+abbr[data-original-title] {
+  text-decoration: underline dotted; // Add the correct text decoration
+  cursor: help; // Add explicit cursor
+  border-bottom: 0; // Remove the bottom border in Firefox 39-
+  text-decoration-skip-ink: none; // Prevent the text-decoration to be skipped
+}
+
+address {
+  margin-bottom: 1rem;
+  font-style: normal;
+  line-height: inherit;
+}
+
+ol,
+ul,
+dl {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+ol ol,
+ul ul,
+ol ul,
+ul ol {
+  margin-bottom: 0;
+}
+
+dt {
+  font-weight: $dt-font-weight;
+}
+
+dd {
+  margin-bottom: .5rem;
+  margin-left: 0; // Undo browser default
+}
+
+blockquote {
+  margin: 0 0 1rem;
+}
+
+b,
+strong {
+  font-weight: $font-weight-bolder; // Add the correct font weight in Chrome, Edge, and Safari
+}
+
+small {
+  font-size: 80%; // Add the correct font size in all browsers
+}
+
+// Prevent `sub` and `sup` elements from affecting the line height in all browsers
+sub,
+sup {
+  position: relative;
+  font-size: 75%;
+  line-height: 0;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -.25em;
+}
+
+sup {
+  top: -.5em;
+}
+
+// Links
+a {
+  color: $link-color;
+  text-decoration: $link-decoration;
+  background-color: transparent; // Remove the gray background on active links in IE 10
+
+  &:hover {
+    color: $link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+}
+
+a:not([href]):not([tabindex]) {
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+// Code
+pre,
+code,
+kbd,
+samp {
+  font-family: $font-family-monospace;
+  font-size: 1em; // Correct the odd `em` font sizing in all browsers
+}
+
+pre {
+  margin-top: 0; // Remove browser default top margin
+  margin-bottom: 1rem; // Reset browser default of `1em` to use `rem`s
+  overflow: auto; // Don't allow content to break outside
+}
+
+// Figures
+figure {
+  margin: 0 0 1rem; // Apply a consistent margin strategy
+}
+
+// Images and content
+img {
+  vertical-align: middle;
+  border-style: none; // Remove the border on images inside links in IE 10-
+}
+
+svg {
+  overflow: hidden; // Workaround for the SVG overflow bug in IE10/11
+  vertical-align: middle;
+}
+
+// Tables
+table {
+  border-collapse: collapse; // Prevent double borders
+}
+
+caption {
+  padding-top: $table-cell-padding;
+  padding-bottom: $table-cell-padding;
+  color: $table-caption-color;
+  text-align: left;
+  caption-side: bottom;
+}
+
+th {
+  text-align: inherit; // Matches default `<td>` alignment
+}
+
+// Forms
+label {
+  display: inline-block;
+  margin-bottom: $label-margin-bottom; // Allow labels to use `margin` for spacing
+}
+
+button {
+  border-radius: 0; // Remove the default `border-radius` that macOS Chrome adds
+}
+
+button:focus {
+  outline: 1px dotted;
+  outline: 5px auto -webkit-focus-ring-color; // Work around a Firefox/IE bug
+}
+
+input,
+button,
+select,
+optgroup,
+textarea {
+  margin: 0; // Remove the margin in Firefox and Safari
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+button,
+input {
+  overflow: visible; // Show the overflow in Edge
+}
+
+button,
+select {
+  text-transform: none; // Remove the inheritance of text transform in Firefox
+}
+
+select {
+  word-wrap: normal; // Remove the inheritance of word-wrap in Safari
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  appearance: button; // Correct the inability to style clickable types in iOS and Safari
+  -webkit-appearance: button; // Correct the inability to style clickable types in iOS and Safari
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  &:not(:disabled) {
+    cursor: pointer; // Add "hand" cursor to non-disabled button elements
+  }
+}
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  padding: 0;
+  border-style: none; // Remove inner border and padding from Firefox
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  box-sizing: border-box; // Add the correct box sizing in IE 10-
+  padding: 0; // Remove the padding in IE 10-
+}
+
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"] {
+  appearance: listbox; // Remove the default appearance of temporal inputs
+  -webkit-appearance: listbox; // Remove the default appearance of temporal inputs
+}
+
+textarea {
+  overflow: auto; // Remove the default vertical scrollbar in IE
+  resize: vertical; // Textareas should really only resize vertically
+}
+
+fieldset {
+  min-width: 0; // Reset the default `min-width` behavior of fieldsets
+  padding: 0;
+  margin: 0;
+  border: 0; // Reset the default outline behavior of fieldsets
+}
+
+legend {
+  display: block;
+  width: 100%;
+  max-width: 100%; // Correct the text wrapping in Edge and IE
+  padding: 0;
+  margin-bottom: .5rem;
+  font-size: 1.5rem;
+  line-height: inherit;
+  color: inherit; // Correct the color inheritance from `fieldset` elements in IE
+  white-space: normal; // Correct the text wrapping in Edge and IE
+}
+
+progress {
+  vertical-align: baseline; // Add the correct vertical alignment in Chrome, Firefox, and Opera
+}
+
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+  height: auto; // Correct the cursor style of increment and decrement buttons in Chrome
+}
+
+[type="search"] {
+  outline-offset: -2px; // Correct the outline style in Safari
+  appearance: none; // Override the extra rounded corners on search inputs in iOS
+  -webkit-appearance: none; // Override the extra rounded corners on search inputs in iOS
+}
+
+[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none; // Remove the inner padding in Chrome and Safari on macOS
+}
+
+::-webkit-file-upload-button {
+  font: inherit; // Change font properties to `inherit` in Safari
+  -webkit-appearance: button; // Correct the inability to style clickable types in iOS and Safari
+}
+
+// Correct element displays
+output {
+  display: inline-block;
+}
+
+summary {
+  display: list-item; // Add the correct display in all browsers
+  cursor: pointer;
+}
+
+template {
+  display: none; // Add the correct display in IE
+}
+
+[hidden] {
+  display: none !important; // Always hide an element with the `hidden` HTML attribute
+}
